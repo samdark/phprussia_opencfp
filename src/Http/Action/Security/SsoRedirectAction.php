@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace OpenCFP\Http\Action\Security;
 
+use Alpha\A;
 use Cartalyst\Sentinel\Sentinel;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 use OpenCFP\Domain\Services\AccountManagement;
 use OpenCFP\Infrastructure\Auth\SentinelUser;
 use OpenCFP\Infrastructure\Auth\UserNotFoundException;
@@ -32,7 +34,7 @@ final class SsoRedirectAction
     /** @var Routing\Generator\UrlGeneratorInterface */
     private $urlGenerator;
 
-    /** @var int */
+    /** @var string */
     private $clientId;
 
     /** @var string */
@@ -54,7 +56,7 @@ final class SsoRedirectAction
         Sentinel $sentinel,
         AccountManagement $accounts,
         Routing\Generator\UrlGeneratorInterface $urlGenerator,
-        int $clientId,
+        string $clientId,
         string $clientSecret,
         string $redirectUri,
         string $resourceUri,
@@ -75,16 +77,20 @@ final class SsoRedirectAction
     public function __invoke(HttpFoundation\Request $request): HttpFoundation\Response
     {
         try {
-            $response = $this->httpClient->post($this->tokenUrl, [
+            $response = $this->httpClient->request(
+                'POST',
+                $this->tokenUrl,
+                [
                 'form_params' => [
                     'grant_type'    => 'authorization_code',
                     'client_id'     => $this->clientId,
                     'client_secret' => $this->clientSecret,
                     'redirect_uri'  => $this->redirectUri,
                     'code'          => $request->get('code'),
-                ],
-            ]);
-        } catch (\Exception $e) {
+                ], 'verify' => false,
+            ]
+            );
+        } catch (RequestException $e) {
             return $this->redirectToLogin($request);
         }
 
@@ -106,11 +112,12 @@ final class SsoRedirectAction
                 'Accept'        => 'application/json',
                 'Authorization' => 'Bearer ' . $details['access_token'],
             ],
+            'verify' => false,
         ]);
         $userDetails = \json_decode((string) $userResponse->getBody(), true);
 
         if (\json_last_error() !== JSON_ERROR_NONE) {
-            $this->redirectToLogin($request);
+            return $this->redirectToLogin($request);
         }
 
         try {

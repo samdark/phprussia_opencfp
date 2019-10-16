@@ -23,7 +23,6 @@ services:
       $applicationTitle: '%application.title%'
       $forgotForm: '@OpenCFP\Http\Form\ForgotForm'
       $resetForm: '@OpenCFP\Http\Form\ResetForm'
-      $reviewerUsers: '%reviewer.users%'
       $showSubmissionCount: '%application.show_submission_count%'
 
   OpenCFP\Http\Action\Security\SsoAction:
@@ -79,3 +78,8 @@ services:
     autowire: false
     factory: [OpenCFP\Environment, fromString]
     arguments: ['%kernel.environment%']
+
+  Swift_Mailer:
+    public: true
+    class: Swift_Mailer
+

@@ -230,4 +230,13 @@ abstract class WebTestCase extends KernelTestCase
     {
         return $this->container->get('session');
     }
+
+    final protected function withFakeSwiftMailer(): self
+    {
+        $fakeMailer = Mockery::mock(\Swift_Mailer::class);
+        $fakeMailer->shouldReceive('send')->andThrow(\Swift_TransportException::class);
+        $this->container->set(\Swift_Mailer::class, $fakeMailer);
+
+        return $this;
+    }
 }

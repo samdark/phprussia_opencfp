@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace OpenCFP\Domain\Services;
 
 use OpenCFP\Infrastructure\Templating\Template;
+use Twig\Environment;
 
 class ResetEmailer
 {
@@ -23,7 +24,7 @@ class ResetEmailer
     private $swiftMailer;
 
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     private $twig;
 
@@ -38,12 +39,12 @@ class ResetEmailer
     private $configTitle;
 
     /**
-     * @param \Swift_Mailer     $swiftMailer
-     * @param \Twig_Environment $twig
-     * @param string            $configEmail
-     * @param string            $configTitle
+     * @param \Swift_Mailer $swiftMailer
+     * @param Environment   $twig
+     * @param string        $configEmail
+     * @param string        $configTitle
      */
-    public function __construct(\Swift_Mailer $swiftMailer, \Twig_Environment $twig, string $configEmail, string $configTitle)
+    public function __construct(\Swift_Mailer $swiftMailer, Environment $twig, string $configEmail, string $configTitle)
     {
         $this->swiftMailer = $swiftMailer;
         $this->twig        = $twig;
