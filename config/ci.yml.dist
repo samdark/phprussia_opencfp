@@ -4,7 +4,7 @@ application:
   email: contact@openconf.com
   eventurl: http://localhost
   event_location: Miami, FL
-  enddate: Dec. 31st, 2100
+  enddate: Oct. 14th, 2018
   show_submission_count: false
   airport: MIA
   arrival: 2014-10-26
@@ -17,28 +17,35 @@ application:
   user_image_size: 300
 
 database:
-  host: 127.0.0.1
+  host: localhost
   database: cfp_test
-  dsn: mysql:dbname=cfp_test;host=127.0.0.1
-  user: cfp_test
-  password: cfp_test
+  dsn: mysql:dbname=root;host=localhost
+  user: root
+  password: root
 
 log:
   level: debug
 
 mail:
-  host: ~
-  port: ~
+  host: localhost
+  port: 1025
   username: ~
   password: ~
   encryption: ~
   auth_mode: ~
 
 opencfpcentral:
-  sso: off
-  clientId: 0
-  clientSecret: 0
-  authorizeUrl: https://www.opencfpcentral.com/oauth/authorize?
-  redirectUri: http://localhost/sso/redirect
+  sso: false
+  clientId:
+  clientSecret:
+  authorizeUrl: http://localhost/oauth/authorize?
+  redirectUri: http://localhost/redirect
   resourceUri: https://www.opencfpcentral.com/api/user
   tokenUrl: https://www.opencfpcentral.com/oauth/token
+
+security:
+  firewalls:
+    secured_area:
+      form_forgot:
+        csrf_parameter: _csrf_security_token
+        csrf_token_id: forgot_password

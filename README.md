@@ -2,10 +2,10 @@
 
 OpenCFP is a PHP-based conference talk submission system.
 
----
-[![CircleCI](https://circleci.com/gh/opencfp/opencfp.svg?style=svg)](https://circleci.com/gh/opencfp/opencfp)
+*YOU CAN SUPPORT THIS PROJECT BY SPONSORING CHRIS HARTJES VIA HIS [GitHub Sponsorship](https://github.com/sponsors/chartjes)*
 
-[![GitHub release](https://img.shields.io/github/release/opencfp/opencfp.svg)](https://github.com/opencfp/opencfp/releases/latest)
+---
+[![GitHub Actions](https://github.com/opencfp/opencfp/workflows/OpenCFP%20CI/badge.svg)](https://github.com/opencfp/opencfp/actions) [![GitHub release](https://img.shields.io/github/release/opencfp/opencfp.svg)](https://github.com/opencfp/opencfp/releases/latest)
 
 ## README Contents
 
@@ -142,6 +142,17 @@ Or you can run
 ```bash
 $ ./script/setup
 ```
+
+Due to current dependencies you will see the following warning message when installing
+this project's dependencies via Composer:
+
+```bash
+Carbon 1 is deprecated, see how to migrate to Carbon 2.
+https://carbon.nesbot.com/docs/#api-carbon-2
+    You can run './vendor/bin/upgrade-carbon' to get help in updating carbon and other frameworks and libraries that depend on it.
+```
+
+
 ### [Specify Web Server Document Root](#specify-web-server-document-root)
 
 Set up your desired webserver to point to the `/web` directory.
@@ -188,23 +199,16 @@ server {
 }
 ```
 
-You can use the included `opencfp-nginx.conf.dist` file and modify it as needed.
+### [Running Locally](#running-locally)
 
-[Caddy](https://caddyserver.com) example:
+After having gone through the setup steps and database migrations, you can test out OpenCFP locally by installing the [Symfony binary](https://symfony.com/download)
+and using the following command:
 
 ```
-localhost:8080
-root /var/www/opencfp/web
-fastcgi / 127.0.0.1:9000 php 
-rewrite / {path} {path}/ /index.php/{path} 
-log access.log
-errors error.log
+symfony server:start
 ```
 
-You can use the included `Caddyfile.dist` file and modify it as needed.
-
-The application does not currently work properly if you use PHP's built-in
-server.
+By default it should start up a web server running your site at `https://127.0.0.1:8000`
 
 ### [Create a Database](#create-a-database)
 
@@ -254,6 +258,15 @@ mail:
     encryption: tls
     auth_mode: ~
 ```
+
+As the project migrates from using Eloquent to Doctrine, you also need to edit the following files to ensure the database
+credentials are correct:
+
+`resources/config/config_testing.yml`
+`resources/config/config_development.yml`
+`resources/config/config_production.yml`
+
+
 ### [Running behind a trusted proxy](#run-trusted-proxy)
 
 If you are running OpenCFP behing a proxy server which adds X-Forwarded-For headers (this could be a cloud based load balancer or a service such as Cloudflare) you will need to set the environment variable TRUST_PROXIES to true this will ensure that OpenCFP trusts the headers set by these proxies for the original IP address and ssl mode. Setting this will trust these headers regardless of where the original request originates, so it's advisable to either lock down your instance so that only the trusted proxy can access it or modify the list of trusted proxies in the index.php file to only include the ip addresses of your proxies.
@@ -261,7 +274,7 @@ If you are running OpenCFP behing a proxy server which adds X-Forwarded-For head
 
 ### [OpenCFP Central](#opencfp-central)
 
-[OpenCFP Central](https://www.opencfpcentral.com) is a web site created by Chris Hartjes to help both speakers and conference organizers. Conference
+[OpenCFP Central](https://www.opencfpcentral.com) is a web site created by [Chris Hartjes](https://github.com/sponsors/chartjes) to help both speakers and conference organizers. Conference
 organizers can create an account and get an OAuth2 client ID and client secret, which can be entered into the
 configuration files. With the ID and secret, change the values for `opencfpcentral.sso` to be `on`, and set
 `opencfpcentral.clientId` and `opencfpcentral.clientSecret` to their respective values. 
@@ -272,17 +285,16 @@ SSO. If you don't already have an account on that instance, one will be created 
 
 ### [Run Migrations](#run-migrations)
 
-This project uses [Phinx](http://phinx.org) to handle migrations. Configuration for Phinx is loaded from [`phinx.php`](phinx.php). 
-The `CFP_ENV` environment variable is used to select an environment to migrate and defaults to `development`. Be sure 
-to correctly configure the app using the `config/:environment.yml` files.
+This project uses [Doctrine Migrations](https://www.doctrine-project.org/projects/migrations.html) to handle migrations. 
 
-To run migrations, make sure you are in the root directory for the project and run the following:
+To run the existing migrations, make sure you are in the root directory for the project and run the following:
 
 ```
-$ CFP_ENV=production vendor/bin/phinx migrate
+$ bin/console doctrine:migrations:migrate --env=<environment> 
 ```
 
-Note: For updating previously installed instances only run migrations as needed.
+where <environment> is one of `testing`, `development`, or `production`. The default environment is `development` 
+
 
 ### [Using Vagrant](#using-vagrant)
 
@@ -318,6 +330,10 @@ mail:
 Mailhog (local mail catching) can be viewed at http://opencfp.test:8025
 
 For more usage information please see the [Laravel Homestead Docs](http://laravel.com/docs/homestead)
+
+You also need to edit the following files for Doctrine support
+
+
 
 ### [Final Touches](#final-touches)
 
@@ -364,7 +380,7 @@ image and run the containers automatically for you:
 $  docker-compose -f docker-compose.yml.dist up --build -d
 ```
 
-So now if you head over to `http://localhost` you will be greeted with a running version of OpenCFP.
+So now if you head over to `http://localhost:8080` you will be greeted with a running version of OpenCFP.
 
 After building and running the Docker image you'll need to [Run Migrations](#run-migrations) and [Add an Admin User](#user-management) before logging-in.
 

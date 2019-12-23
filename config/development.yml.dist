@@ -14,8 +14,8 @@ application:
   date_format: d/m/Y
   date_timezone: "UTC"
   coc_link: http://confcodeofconduct.com/
-  show_contrib_banner: true
   venue_image_path: /assets/img/venue.jpg
+  user_image_size: 300
 
 database:
   host: 127.0.0.1
@@ -57,13 +57,6 @@ talk:
   types:
     regular: Regular (50 mins)
     Autorial: Tutorial (3 hrs)
-
-security:
-  firewalls:
-    secured_area:
-      form_forgot:
-        csrf_parameter: _csrf_security_token
-        csrf_token_id: forgot_password
 
 reviewer:
   users:

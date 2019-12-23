@@ -28,8 +28,7 @@ final class PromoteActionTest extends WebTestCase implements TransactionalTestCa
         $id = $this->faker()->numberBetween(500);
 
         /** @var Model\User $admin */
-        $admin = factory(Model\User::class, 1)->create()->first();
-
+        $admin     = factory(Model\User::class, 1)->create()->first();
         $csrfToken = $this->container->get('security.csrf.token_manager')
             ->getToken('admin_speaker_promote')
             ->getValue();
@@ -155,7 +154,7 @@ final class PromoteActionTest extends WebTestCase implements TransactionalTestCa
                 ),
                 [
                     'role'     => 'Admin',
-                    'token'    => \uniqid(),
+                    'token'    => \uniqid('', true),
                     'token_id' => 'admin_speaker_promote',
                 ]
             );

@@ -18,7 +18,7 @@ use OpenCFP\WebPath;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction;
+use Twig\TwigFunction;
 
 class TwigExtension extends AbstractExtension
 {
@@ -47,14 +47,22 @@ class TwigExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('uploads', function ($path) {
+            new TwigFunction('uploads', function ($path) {
                 return $this->path->uploadPath() . $path;
             }),
-            new Twig_SimpleFunction('assets', function ($path) {
-                return  $this->path->assetsPath() . $path;
+            new TwigFunction('thumbnail', function ($path) {
+                // Add the "thumb" segment to the given path
+                $tmpThumbnailFilenameParts = \explode('.', $path);
+                \array_splice($tmpThumbnailFilenameParts, -1, 0, ['thumb']);
+                $path = \implode('.', $tmpThumbnailFilenameParts);
+
+                return $this->path->uploadPath() . $path;
+            }),
+            new TwigFunction('assets', function ($path) {
+                return $this->path->assetsPath() . $path;
             }),
 
-            new Twig_SimpleFunction('active', function ($route) {
+            new TwigFunction('active', function ($route) {
                 return $this->urlGenerator->generate($route)
                     === $this->requestStack->getCurrentRequest()->getRequestUri();
             }),

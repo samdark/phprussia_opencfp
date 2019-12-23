@@ -10,7 +10,6 @@ auto-review: vendor
 	SYMFONY_DEPRECATIONS_HELPER=disabled vendor/bin/phpunit --testsuite auto-review
 
 cache: vendor
-	bin/console cache:clear --env=development
 	bin/console cache:clear --env=testing
 
 coverage: vendor
@@ -20,29 +19,32 @@ cs: vendor
 	vendor/bin/php-cs-fixer fix --verbose --diff
 
 database: test-env vendor
-	mysql -uroot -e "DROP DATABASE IF EXISTS cfp_test"
-	mysql -uroot -e "CREATE DATABASE cfp_test"
-	CFP_ENV=testing vendor/bin/phinx migrate --environment testing
-	mysqldump -uroot cfp_test > tests/dump.sql
+	bin/console doctrine:database:drop --env=testing --force
+	bin/console doctrine:database:create --env=testing
+	bin/console doctrine:migrations:migrate --env=testing -n
+
+doctrine:
+	bin/console doctrine:schema:update --env=testing --force
+	bin/console doctrine:schema:validate --env=testing
+	bin/console doctrine:mapping:info --env=testing
 
 infection: vendor database
 	php -d zend_extension=xdebug.so vendor/bin/infection
 
 integration: test-env vendor database cache
-	SYMFONY_DEPRECATIONS_HELPER=disabled vendor/bin/phpunit --testsuite integration
+	SYMFONY_DEPRECATIONS_HELPER=disabled CFP_ENV=testing vendor/bin/phpunit --testsuite integration
 
 stan: vendor
 	vendor/bin/phpstan analyse
 
-test: auto-review integration unit
+test: auto-review doctrine integration unit
 
 test-env:
 	if [ ! -f "config/testing.yml" ]; then cp config/testing.yml.dist config/testing.yml; fi
 
 unit: vendor
-	SYMFONY_DEPRECATIONS_HELPER=disabled vendor/bin/phpunit --testsuite unit
+	SYMFONY_DEPRECATIONS_HELPER=disabled CFP_ENV=testing vendor/bin/phpunit --testsuite unit
 
 vendor: composer.json composer.lock
 	composer validate
-	composer normalize
 	composer install
