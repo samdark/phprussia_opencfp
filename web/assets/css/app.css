@@ -1292,3 +1292,7 @@ div:empty {
   width: 16.66667%;
   min-width: 20rem;
 }
+
+.container {
+  padding: 1em;
+}
