@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2013-2019 OpenCFP
+ * Copyright (c) 2013-2020 OpenCFP
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -69,7 +69,7 @@ class User extends Eloquent
      *
      * @param int $talkId
      *
-     * @return Collection|Talk[]
+     * @return Collection
      */
     public function getOtherTalks(int $talkId = 0): Collection
     {

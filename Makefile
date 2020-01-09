@@ -29,13 +29,13 @@ doctrine:
 	bin/console doctrine:mapping:info --env=testing
 
 infection: vendor database
-	php -d zend_extension=xdebug.so vendor/bin/infection
+	SYMFONY_DEPRECATIONS_HELPER=disabled CFP_ENV=testing php -d zend_extension=xdebug.so vendor/bin/infection
 
 integration: test-env vendor database cache
 	SYMFONY_DEPRECATIONS_HELPER=disabled CFP_ENV=testing vendor/bin/phpunit --testsuite integration
 
-stan: vendor
-	vendor/bin/phpstan analyse
+static: vendor
+	vendor/bin/psalm
 
 test: auto-review doctrine integration unit
 

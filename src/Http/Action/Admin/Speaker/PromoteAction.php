@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2013-2019 OpenCFP
+ * Copyright (c) 2013-2020 OpenCFP
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -40,8 +40,8 @@ final class PromoteAction
 
     public function __invoke(HttpFoundation\Request $request): HttpFoundation\Response
     {
-        $role = $request->get('role');
-        $id   = (int) $request->get('id');
+        $role = $request->query->get('role');
+        $id   = $request->attributes->getInt('id');
 
         try {
             $user = $this->accountManagement->findById($id);

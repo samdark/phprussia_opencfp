@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2013-2019 OpenCFP
+ * Copyright (c) 2013-2020 OpenCFP
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -58,7 +58,7 @@ final class EditAction
     {
         $user = $this->authentication->user();
 
-        if ((string) $user->getId() !== $request->get('id')) {
+        if ((string) $user->getId() !== $request->attributes->get('id')) {
             $request->getSession()->set('flash', [
                 'type'  => 'error',
                 'short' => 'Error',

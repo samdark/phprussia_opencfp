@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2013-2019 OpenCFP
+ * Copyright (c) 2013-2020 OpenCFP
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -52,17 +52,9 @@ final class UpdateActionTest extends Framework\TestCase
             )
             ->shouldBeCalled();
 
-        $request = $this->prophesize(HttpFoundation\Request::class);
+        $request = new HttpFoundation\Request([], ['id' => $talkId]);
 
-        $request
-            ->getSession()
-            ->shouldBeCalled()
-            ->willReturn($session);
-
-        $request
-            ->get(Argument::exact('id'))
-            ->shouldBeCalled()
-            ->willReturn($talkId);
+        $request->setSession($session->reveal());
 
         $callForPapers = $this->prophesize(CallForPapers::class);
 
@@ -101,7 +93,7 @@ final class UpdateActionTest extends Framework\TestCase
         );
 
         /** @var HttpFoundation\RedirectResponse $response */
-        $response = $action($request->reveal());
+        $response = $action($request);
 
         $this->assertInstanceOf(HttpFoundation\RedirectResponse::class, $response);
         $this->assertSame(HttpFoundation\Response::HTTP_FOUND, $response->getStatusCode());

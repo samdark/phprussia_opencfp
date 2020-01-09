@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2013-2019 OpenCFP
+ * Copyright (c) 2013-2020 OpenCFP
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -57,7 +57,7 @@ class ResetEmailer
      * @param string $email
      * @param string $resetCode
      *
-     * @return int
+     * @return false|int
      */
     public function send($userId, $email, $resetCode)
     {
@@ -65,6 +65,7 @@ class ResetEmailer
 
         try {
             $message = $this->preparedMessage($email, $parameters);
+
             return $this->swiftMailer->send($message);
         } catch (\Exception $e) {
             return false;

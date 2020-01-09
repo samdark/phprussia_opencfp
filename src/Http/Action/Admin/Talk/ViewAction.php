@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2013-2019 OpenCFP
+ * Copyright (c) 2013-2020 OpenCFP
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -26,7 +26,7 @@ final class ViewAction
     private $talkHandler;
 
     /**
-     * @var Twig\Environment
+     * @var Environment
      */
     private $twig;
 
@@ -47,7 +47,7 @@ final class ViewAction
 
     public function __invoke(HttpFoundation\Request $request): HttpFoundation\Response
     {
-        $this->talkHandler->grabTalk((int) $request->get('id'));
+        $this->talkHandler->grabTalk($request->attributes->getInt('id'));
 
         if (!$this->talkHandler->view()) {
             $request->getSession()->set('flash', [

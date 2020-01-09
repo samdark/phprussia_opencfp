@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2013-2019 OpenCFP
+ * Copyright (c) 2013-2020 OpenCFP
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -45,7 +45,10 @@ class TalkFilter
         $this->talk      = $talk;
     }
 
-    public function getTalks(int $adminUserId, $filter = null, $category = null, $type = null, $options = []): array
+    /**
+     * @param array $options
+     */
+    public function getTalks(int $adminUserId, $filter = null, $category = null, $type = null, array $options = []): array
     {
         // Merge options with default options
         $options = $this->getSortOptions(

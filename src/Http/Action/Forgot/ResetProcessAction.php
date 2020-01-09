@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2013-2019 OpenCFP
+ * Copyright (c) 2013-2020 OpenCFP
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -32,7 +32,7 @@ final class ResetProcessAction
     private $accountManagement;
 
     /**
-     * @var Twig\Environment
+     * @var Environment
      */
     private $twig;
 
@@ -55,8 +55,8 @@ final class ResetProcessAction
 
     public function __invoke(HttpFoundation\Request $request): HttpFoundation\Response
     {
-        $userId    = $request->get('user_id');
-        $resetCode = $request->get('reset_code');
+        $userId    = $request->attributes->get('user_id');
+        $resetCode = $request->attributes->get('reset_code');
 
         if (empty($resetCode)) {
             throw new \Exception();
